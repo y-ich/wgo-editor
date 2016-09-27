@@ -1,0 +1,12 @@
+{
+  "name": "WGo Editor",
+  "description": "SGF editor",
+  "version": "0.0.1",
+  "main": "index.html",
+  "chromium-args": "--enable-logging=stderr",
+  "window": {
+      "title": "WGo Editor",
+      "width": 700,
+      "height": 570
+  }
+}
