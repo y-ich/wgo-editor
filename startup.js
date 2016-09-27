@@ -42,7 +42,7 @@ var setupMainMenu = function() {
     if (process.platform == 'darwin') {
         menubar.createMacBuiltin('WGo');
         menubar.insert(new nw.MenuItem({
-            label: 'File',
+            label: WGo.t('file'),
             submenu: fileMenu
         }), 1);
     }
