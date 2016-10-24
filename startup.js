@@ -1,10 +1,13 @@
 (function() {
-var fs = nw.require('fs');
+if (typeof(nw) != "undefined") {
+	var fs = nw.require('fs');
 
-// 大域変数
-
-var manifest = JSON.parse(
-	fs.readFileSync('package.json', { encoding: 'utf-8' }));
+	var manifest = JSON.parse(
+		fs.readFileSync('package.json', { encoding: 'utf-8' }));
+	nw.App.on('open', function(evt) {
+		console.log(evt);
+	});
+}
 var player = null;
 
 // 関数
@@ -98,9 +101,15 @@ var setupMainMenu = function() {
     nw.Window.get().menu = menubar;
 }
 
-if (typeof(nw) != "undefined")
-    setupMainMenu();
+var sgf = null;
+
+if (typeof(nw) != "undefined") {
+	setupMainMenu();
+	if (nw.App.argv.length > 0) {
+		sgf = fs.readFileSync(nw.App.argv[0]);
+	}
+}
 player = new WGo.BasicPlayer(document.getElementById("player"), {
-    sgf: `(;FF[4]GM[1]CA[UTF-8]AP[${manifest.name}:${manifest.version}]EV[]GN[]GC[]PB[]BR[]PW[]WR[])`
+    sgf: sgf ? sgf : `(;FF[4]GM[1]CA[UTF-8]AP[${manifest.name}:${manifest.version}]EV[]GN[]GC[]PB[]BR[]PW[]WR[])`
 });
 })();
