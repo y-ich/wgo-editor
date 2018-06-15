@@ -1,12 +1,19 @@
 {
-  "name": "WGo Editor",
+  "name": "wgo-editor",
   "description": "SGF editor",
   "version": "0.0.2",
   "main": "index.html",
   "chromium-args": "--enable-logging=stderr",
   "window": {
-      "title": "WGo Editor",
-      "width": 700,
-      "height": 570
+    "title": "WGo Editor",
+    "width": 700,
+    "height": 570
+  },
+  "dependencies": {
+    "gtp-wrapper": "github:y-ich/gtp-wrapper#leela-binaries"
+  },
+  "scripts": {
+    "dev": "nw .",
+    "build": "sh build.sh"
   }
 }
