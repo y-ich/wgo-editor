@@ -4,8 +4,6 @@ const fs = require('fs');
 const path = require('path');
 process.env.LZ19_WEIGHTS = path.join(process.cwd(), 'elf_converted_weights.txt');
 const { GtpLeela, GtpLeelaZero19, GtpLeelaZero9, coord2move } = require('gtp-wrapper');
-
-const manifest = JSON.parse(fs.readFileSync('package.json', { encoding: 'utf-8' }));
 let player = null;
 let gtp = null;
 let restore = null;
@@ -100,7 +98,7 @@ function setupMainMenu() {
     fileMenu.append(new nw.MenuItem({
         label: WGo.t('new'),
         click: function() {
-            nw.Window.open('index.html', manifest.window);
+            nw.Window.open('index.html', nw.App.manifest.window);
         },
         key: 'n',
         modifiers: 'cmd'
@@ -242,7 +240,7 @@ function main() {
         sgf = fs.readFileSync(nw.App.argv[0]);
     }
     player = new WGo.BasicPlayer(document.getElementById("player"), {
-        sgf: sgf ? sgf : `(;FF[4]GM[1]CA[UTF-8]AP[${manifest.name}:${manifest.version}]EV[]GN[]GC[]PB[]BR[]PW[]WR[])`
+        sgf: sgf ? sgf : `(;FF[4]GM[1]CA[UTF-8]AP[${nw.App.manifest.name}:${nw.App.manifest.version}]EV[]GN[]GC[]PB[]BR[]PW[]WR[])`
     });
 }
 
