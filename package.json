@@ -1,7 +1,7 @@
 {
   "name": "wgo-editor",
   "description": "SGF editor",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "main": "index.html",
   "chromium-args": "--enable-logging=stderr",
   "window": {
@@ -17,7 +17,7 @@
     "nwVersion": "0.31.2"
   },
   "scripts": {
-    "dist": "build --tasks linux-x64,mac-x64 --mirror https://dl.nwjs.io/ .",
+    "dist": "build --tasks linux-x64,mac-x64,win-x64 --mirror https://dl.nwjs.io/ .",
     "start": "run --x64 --mirror https://dl.nwjs.io/ ."
   },
   "devDependencies": {

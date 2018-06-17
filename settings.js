@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const win = nw.Window.get();
-win.showDevTools();
+//win.showDevTools();
 
 function restoreSettings() {
     try {

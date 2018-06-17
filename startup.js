@@ -1,7 +1,7 @@
 /* global nw WGo jssgf */
 const win = nw.Window.get();
 /* for debugging */
-win.showDevTools();
+//win.showDevTools();
 /**/
 const os = require('os');
 const fs = require('fs');
@@ -39,7 +39,7 @@ function setEngines() {
 setEngines();
 
 function openSettings() {
-    nw.Window.open('engines.html', { height: 500 }, function(win) {
+    nw.Window.open(`engines.${AppLang.lang}.html`, { height: 500 }, function(win) {
         win.on('closed', function() {
             setEngines();
         });
