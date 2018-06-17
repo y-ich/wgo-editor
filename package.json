@@ -7,7 +7,7 @@
   "window": {
     "title": "WGo Editor",
     "width": 700,
-    "height": 570
+    "height": 580
   },
   "dependencies": {
     "gtp-wrapper": "1.3.0",

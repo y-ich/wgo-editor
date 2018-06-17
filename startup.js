@@ -122,19 +122,19 @@ function setupMainMenu() {
     if (process.platform == 'darwin') {
         menubar.createMacBuiltin('WGoEditor');
         menubar.insert(new nw.MenuItem({
-            label: WGo.t('file'),
+            label: AppLang.t('file'),
             submenu: fileMenu
         }), 1);
     }
     else {
         menubar.append(new nw.MenuItem({
-            label: WGo.t('file'),
+            label: AppLang.t('file'),
             submenu: fileMenu
         }));
     }
 
     fileMenu.append(new nw.MenuItem({
-        label: WGo.t('new'),
+        label: AppLang.t('new'),
         click: function() {
             nw.Window.open('index.html', nw.App.manifest.window);
         },
@@ -142,9 +142,9 @@ function setupMainMenu() {
         modifiers: 'cmd'
     }));
     fileMenu.append(new nw.MenuItem({
-        label: WGo.t('open'),
+        label: AppLang.t('open'),
         click: function() {
-            if (player.kifu._edited && !confirm(WGo.t('confirm_abandon'))) {
+            if (player.kifu._edited && !confirm(AppLang.t('confirm_abandon'))) {
                 return
             }
             delete fileInput.nwsaveas;
@@ -154,7 +154,7 @@ function setupMainMenu() {
         modifiers: 'cmd'
     }));
     fileMenu.append(new nw.MenuItem({
-        label: WGo.t('save'),
+        label: AppLang.t('save'),
         click: function() {
             saveCurrentSgf(player, fileInput.value);
         },
@@ -162,7 +162,7 @@ function setupMainMenu() {
         modifiers: 'cmd'
     }));
     fileMenu.append(new nw.MenuItem({
-        label: WGo.t('saveas'),
+        label: AppLang.t('saveas'),
         click: function() {
             fileInput.nwsaveas = 'noname.sgf'
             fileInput.click();
@@ -171,7 +171,7 @@ function setupMainMenu() {
         modifiers: 'cmd+shift'
     }));
     fileMenu.append(new nw.MenuItem({
-        label: '設定',
+        label: AppLang.t('settings'),
         click: openSettings
     }));
 
@@ -204,7 +204,7 @@ function showPV(player, sgf, winrate, pv, nodes) {
         color = jssgf.opponentOf(color);
     }
     node.LB = lb;
-    node.C = `黒の勝率${Math.round(winrate)}%\n(プレイアウト数${nodes})`;
+    node.C = `${AppLang.t('black-winrate')} ${Math.round(winrate)}%\n(${AppLang.t('playouts')} ${nodes})`;
     player.setFrozen(false);
     player.loadSgf(jssgf.stringify(collection), Infinity);
     player.setFrozen(true);
@@ -286,7 +286,7 @@ function main() {
         sgf: sgf ? sgf : `(;FF[4]GM[1]CA[UTF-8]AP[${nw.App.manifest.name}:${nw.App.manifest.version}]EV[]GN[]GC[]PB[]BR[]PW[]WR[])`
     });
     win.on('close', function(event) {
-        if (player.kifu._edited && !confirm(WGo.t('confirm_close'))) {
+        if (player.kifu._edited && !confirm(AppLang.t('confirm_close'))) {
             return;
         }
         win.close(true);

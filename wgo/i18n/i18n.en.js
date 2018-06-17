@@ -58,12 +58,5 @@ WGo.i18n[WGo.lang] = {
 	"score": "Score",
 	"bwin": "Black wins by $ points.",
 	"wwin": "White wins by $ points.",
-	"help_score": "Click on stones to mark them dead or alive. You can also set and unset territory points by clicking on them. Territories must be completely bordered.",
-	"file": "File",
-	"new": "New",
-	"open": "Open…",
-	"save": "Save",
-	"saveas": "Save as…",
-	"confirm_close": "Changes are not saved. Do you really quit?",
-	"confirm_abandon": "Changes are not saved. Do you really abandon them?",
+	"help_score": "Click on stones to mark them dead or alive. You can also set and unset territory points by clicking on them. Territories must be completely bordered."
 }

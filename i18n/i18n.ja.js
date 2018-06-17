@@ -1,0 +1,14 @@
+AppLang.lang = "ja"; // set language code
+
+AppLang.i18n[AppLang.lang] = {
+	"file": "ファイル",
+	"new": "新規",
+	"open": "開く…",
+	"save": "保存",
+	"saveas": "別名で保存…",
+	"confirm_close": "変更が保存されていません。保存せずに終了してもいいですか？",
+    "confirm_abandon": "変更が保存されていません。破棄してもいいですか？",
+    "settings": "設定",
+    "black-winrate": "黒の勝率",
+    "playouts": "プレイアウト数"
+};

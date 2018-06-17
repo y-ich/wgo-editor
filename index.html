@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <title>WGo Editor</title>
+    <link rel="stylesheet" href="node_modules/purecss/build/pure-min.css">
     <script type="text/javascript" src="wgo/wgo.min.js"></script>
     <script type="text/javascript" src="wgo/wgo.player.min.js"></script>
     <script type="text/javascript" src="i18n.js"></script>
@@ -10,10 +11,11 @@
     <script src="jssgf.js"></script>
   </head>
   <body>
-    <button id="ai-start" type="button">AI start</button>
-    <button id="ai-stop" type="button" style="display: none">AI stop</button>
     <div id="player" style="min-width: 650px;"></div>
-    <div id="debug"></div>
+    <div style="text-align: center">
+        <button id="ai-start" type="button" class="pure-button">AI start</button>
+        <button id="ai-stop" type="button" class="pure-button pure-button-active" style="display: none">AI stop</button>
+    </div>
     <script src="startup.js"></script>
   </body>
 </html>
