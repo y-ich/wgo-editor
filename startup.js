@@ -1,12 +1,50 @@
 /* global nw WGo jssgf */
+const win = nw.Window.get();
+/* for debugging */
+win.showDevTools();
+/**/
 const os = require('os');
 const fs = require('fs');
 const path = require('path');
 process.env.LZ19_WEIGHTS = path.join(process.cwd(), 'elf_converted_weights.txt');
-const { GtpLeela, GtpLeelaZero19, GtpLeelaZero9, coord2move } = require('gtp-wrapper');
+const { GtpLeela, GtpLeelaZero, coord2move } = require('gtp-wrapper');
+
+class GtpLeelaZero19 extends GtpLeelaZero {}
+class GtpLeelaZero9 extends GtpLeelaZero {}
+
+let engines = null;
 let player = null;
 let gtp = null;
 let restore = null;
+
+function setEngines() {
+    try {
+        engines = JSON.parse(fs.readFileSync(
+            path.join(nw.App.dataPath, 'engines.json'),
+            { encoding: 'utf-8' }
+        ));
+        if (engines.leela) {
+            GtpLeela.init(engines.leela.workDir, engines.leela.command, engines.leela.options);
+        }
+        if (engines.leelaZero19) {
+            GtpLeelaZero19.init(engines.leelaZero19.workDir, engines.leelaZero19.command, engines.leelaZero19.options);
+        }
+        if (engines.leelaZero9) {
+            GtpLeelaZero9.init(engines.leelaZero9.workDir, engines.leelaZero9.command, engines.leelaZero9.options);
+        }
+    } catch (e) {
+        console.log('no engines.json');
+    }
+}
+setEngines();
+
+function openSettings() {
+    nw.Window.open('engines.html', { height: 500 }, function(win) {
+        win.on('closed', function() {
+            setEngines();
+        });
+    });
+}
 
 function sgfUntil(sgf, path) {
     const collection = jssgf.fastParse(sgf);
@@ -82,7 +120,7 @@ function setupMainMenu() {
     const fileMenu = new nw.Menu();
 
     if (process.platform == 'darwin') {
-        menubar.createMacBuiltin('WGo');
+        menubar.createMacBuiltin('WGoEditor');
         menubar.insert(new nw.MenuItem({
             label: WGo.t('file'),
             submenu: fileMenu
@@ -132,6 +170,10 @@ function setupMainMenu() {
         key: 's',
         modifiers: 'cmd+shift'
     }));
+    fileMenu.append(new nw.MenuItem({
+        label: '設定',
+        click: openSettings
+    }));
 
     nw.Window.get().menu = menubar;
 }
@@ -161,10 +203,8 @@ function showPV(player, sgf, winrate, pv, nodes) {
         num += 1;
         color = jssgf.opponentOf(color);
     }
-    console.log('foo');
-    console.log(lb instanceof Array);
     node.LB = lb;
-    node.C = `黒の勝率${Math.round(winrate)}%`;
+    node.C = `${nodes}プレイアウト\n黒の勝率${Math.round(winrate)}%`;
     player.loadSgf(jssgf.stringify(collection), Infinity);
 }
 
@@ -173,6 +213,10 @@ nw.App.on('open', function(evt) {
 });
 
 document.getElementById('ai-start').addEventListener('click', function(event) {
+    if (!engines) {
+        openSettings();
+        return;
+    }
     event.currentTarget.style.display = 'none';
     document.getElementById('ai-stop').style.display = 'inline';
     const BYOYOMI = 57600; // 16時間(5時封じ手から翌朝9時を想定)。free dynoの場合40分程度でmemory quota exceededになる
@@ -189,23 +233,15 @@ document.getElementById('ai-start').addEventListener('click', function(event) {
     let SelectedGtpLeela;
     switch (size) {
         case 9:
-        SelectedGtpLeela = GtpLeelaZero9;
+        SelectedGtpLeela = engines.leelaZero9 ? GtpLeelaZero9 : GtpLeela;
         break;
         case 19:
-        SelectedGtpLeela = GtpLeelaZero19;
+        SelectedGtpLeela = engines.leelaZero19 ? GtpLeelaZero19 : GtpLeela;
         break;
         default:
         SelectedGtpLeela = GtpLeela;
     }
-    const options = ['--threads', os.cpus().length];
-
-    if (SelectedGtpLeela === GtpLeela) {
-        options.push('--nobook');
-        if (rule === 'Japanese') {
-            options.push('--komiadjust');
-        }
-    }
-    const { instance, _ } = SelectedGtpLeela.genmoveFrom(sgf, BYOYOMI, 'gtp', options, 0, line => {
+    const { instance, promise } = SelectedGtpLeela.genmoveFrom(sgf, BYOYOMI, 'gtp', [], 0, line => {
         const dump = SelectedGtpLeela.parseDump(line);
         if (dump) {
             const winrate = Math.max(Math.min(dump.winrate, 100), 0);
@@ -217,6 +253,9 @@ document.getElementById('ai-start').addEventListener('click', function(event) {
         }
     });
     gtp = instance;
+    promise.catch(function(r) {
+        console.log(r);
+    });
 }, false);
 
 document.getElementById('ai-stop').addEventListener('click', async function() {
@@ -241,6 +280,12 @@ function main() {
     }
     player = new WGo.BasicPlayer(document.getElementById("player"), {
         sgf: sgf ? sgf : `(;FF[4]GM[1]CA[UTF-8]AP[${nw.App.manifest.name}:${nw.App.manifest.version}]EV[]GN[]GC[]PB[]BR[]PW[]WR[])`
+    });
+    win.on('close', function(event) {
+        if (player.kifu._edited && !confirm(WGo.t('confirm_close'))) {
+            return;
+        }
+        win.close(true);
     });
 }
 

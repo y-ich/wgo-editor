@@ -10,10 +10,17 @@
     "height": 570
   },
   "dependencies": {
-    "gtp-wrapper": "github:y-ich/gtp-wrapper#leela-binaries"
+    "gtp-wrapper": "1.3.0",
+    "purecss": "^1.0.0"
+  },
+  "build": {
+    "nwVersion": "0.31.2"
   },
   "scripts": {
-    "dev": "nw .",
-    "build": "sh build.sh"
+    "dist": "build --tasks linux-x64,mac-x64 --mirror https://dl.nwjs.io/ .",
+    "start": "run --x64 --mirror https://dl.nwjs.io/ ."
+  },
+  "devDependencies": {
+    "nwjs-builder-phoenix": "^1.14.6"
   }
 }

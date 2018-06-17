@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Engine Settings</title>
+    <link rel="stylesheet" href="node_modules/purecss/build/pure-min.css">
+    <style>
+    .full-width {
+        width: 100%;
+    }
+    </style>
+</head>
+<body>
+    <form id="settings" action="" class="pure-form pure-form-stacked" style="margin: 10px;">
+        <div class="pure-control-group">
+            <label for="leela-work-dir">Leela 作業フォルダー</label>
+            <input type="text" name="leela-work-dir" class="full-width">
+        </div>
+        <div class="pure-control-group">
+            <label for="leela-command">Leela コマンド</label>
+            <input type="text" name="leela-command" class="full-width">
+        </div>
+        <div class="pure-control-group">
+            <label for="leela-zero-19-work-dir">19路盤Leela Zero 作業フォルダー</label>
+            <input type="text" name="leela-zero-19-work-dir" class="full-width">
+        </div>
+        <div class="pure-control-group">
+            <label for="leela-zero-19-command">19路盤Leela Zero コマンド</label>
+            <input type="text" name="leela-zero-19-command" class="full-width">
+        </div>
+        <div class="pure-control-group">
+            <label for="leela-zero-9-work-dir">9路盤Leela Zero 作業フォルダー</label>
+            <input type="text" name="leela-zero-9-work-dir" class="full-width">
+        </div>
+        <div class="pure-control-group">
+            <label for="leela-zero-9-command">9路盤Leela Zero コマンド</label>
+            <input type="text" name="leela-zero-9-command" class="full-width">
+        </div>
+        <div style="text-align: right;">
+            <button>保存</button>
+        </div>
+    </form>
+    <script src="settings.js"></script>
+</body>
+</html>
