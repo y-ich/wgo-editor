@@ -204,8 +204,10 @@ function showPV(player, sgf, winrate, pv, nodes) {
         color = jssgf.opponentOf(color);
     }
     node.LB = lb;
-    node.C = `${nodes}プレイアウト\n黒の勝率${Math.round(winrate)}%`;
+    node.C = `黒の勝率${Math.round(winrate)}%\n(プレイアウト数${nodes})`;
+    player.setFrozen(false);
     player.loadSgf(jssgf.stringify(collection), Infinity);
+    player.setFrozen(true);
 }
 
 nw.App.on('open', function(evt) {
@@ -219,6 +221,7 @@ document.getElementById('ai-start').addEventListener('click', function(event) {
     }
     event.currentTarget.style.display = 'none';
     document.getElementById('ai-stop').style.display = 'inline';
+    player.setFrozen(true);
     const BYOYOMI = 57600; // 16時間(5時封じ手から翌朝9時を想定)。free dynoの場合40分程度でmemory quota exceededになる
     restore = {
         sgf: player.kifuReader.kifu.toSgf(),
@@ -266,6 +269,7 @@ document.getElementById('ai-stop').addEventListener('click', async function() {
         gtp = null;
     }
     if (restore) {
+        player.setFrozen(false);
         player.loadSgf(restore.sgf, restore.path);
         restore = null;
     }
