@@ -150,7 +150,7 @@ function setupMainMenu() {
             delete fileInput.nwsaveas;
             fileInput.click();
         },
-        key: 's',
+        key: 'o',
         modifiers: 'cmd'
     }));
     fileMenu.append(new nw.MenuItem({
