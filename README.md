@@ -6,6 +6,11 @@
 
 (LeelaもしくはLeela Zeroは別途インストールしてください)
 
+## LeelaもしくはLeela Zeroの設定
+画面下の"AI start”ボタンを始めてクリックすると、設定ウィンドウが現れます。
+LeelaもしくはLeela Zeroの欄を埋めてください。
+設定が終わってから再度"AI start”ボタンをクリックすると、Leelaが検討を始めてリアルタイムで読み筋を表示します。
+
 ## ダウンロード
 
 - [64bit Windows用](https://github.com/y-ich/wgo-editor/releases/download/v0.1.0/wgo-editor.win-x64.zip) (パッケージ作っただけで動作未確認です、すみません…)
