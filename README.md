@@ -8,6 +8,6 @@
 
 ##ダウンロード
 
-- [64bit Windows用](https://github.com/y-ich/wgo-editor/releases/download/v0.1.0/wgo-editor.win-x64.zip)
+- [64bit Windows用](https://github.com/y-ich/wgo-editor/releases/download/v0.1.0/wgo-editor.win-x64.zip) (パッケージ作っただけで動作未確認です、すみません…)
 - [macOS用](https://github.com/y-ich/wgo-editor/releases/download/v0.1.0/wgo-editor.mac-x64.zip)
-- [64bit Linux用](https://github.com/y-ich/wgo-editor/releases/download/v0.1.0/wgo-editor.linux-x64.zip)
+- [64bit Linux用](https://github.com/y-ich/wgo-editor/releases/download/v0.1.0/wgo-editor.linux-x64.zip) (パッケージ作っただけで動作未確認です、すみません…)
