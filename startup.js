@@ -1,9 +1,5 @@
-/* global nw WGo jssgf */
+/* global nw WGo jssgf AppLang */
 const win = nw.Window.get();
-/* for debugging */
-//win.showDevTools();
-/**/
-const os = require('os');
 const fs = require('fs');
 const path = require('path');
 process.env.LZ19_WEIGHTS = path.join(process.cwd(), 'elf_converted_weights.txt');
@@ -173,6 +169,18 @@ function setupMainMenu() {
     fileMenu.append(new nw.MenuItem({
         label: AppLang.t('settings'),
         click: openSettings
+    }));
+
+    const devMenu = new nw.Menu();
+    menubar.append(new nw.MenuItem({
+        label: AppLang.t('develop'),
+        submenu: devMenu
+    }));
+    devMenu.append(new nw.MenuItem({
+        label: AppLang.t('devtools'),
+        click: function() {
+            win.showDevTools();
+        }
     }));
 
     nw.Window.get().menu = menubar;

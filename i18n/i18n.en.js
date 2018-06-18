@@ -10,5 +10,7 @@ AppLang.i18n[AppLang.lang] = {
     "confirm_abandon": "Changes are not saved. Do you really abandon them?",
     "settings": "Settings",
     "black-winrate": "Black's winrate",
-    "playouts": "Playouts"
+	"playouts": "Playouts",
+	"develop": "Development",
+	"devtools": "DevTools"
 };

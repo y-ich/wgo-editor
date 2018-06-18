@@ -10,5 +10,7 @@ AppLang.i18n[AppLang.lang] = {
     "confirm_abandon": "変更が保存されていません。破棄してもいいですか？",
     "settings": "設定",
     "black-winrate": "黒の勝率",
-    "playouts": "プレイアウト数"
+	"playouts": "プレイアウト数",
+	"develop": "開発",
+	"devtools": "開発ツール"
 };
