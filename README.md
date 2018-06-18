@@ -1,5 +1,6 @@
 # WGo Editor
 [WGo.js](http://wgo.waltheri.net/)を使ったSGFエディタです。
+コピーショートカットキーで盤上の画像をクリッピボードにコピーできます。局面をツイートしたいときなどにご利用ください。
 [Leela](https://www.sjeng.org/leela.html)や[Leela Zero](https://github.com/gcp/leela-zero)と連携して局面検討ができるのが特長です。
 
 ![スクリーンショット](screenshot.png)

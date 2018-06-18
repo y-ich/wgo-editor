@@ -116,7 +116,7 @@ function setupMainMenu() {
     const fileMenu = new nw.Menu();
 
     if (process.platform == 'darwin') {
-        menubar.createMacBuiltin('WGoEditor');
+        menubar.createMacBuiltin('wgo-editor');
         menubar.insert(new nw.MenuItem({
             label: AppLang.t('file'),
             submenu: fileMenu
@@ -218,9 +218,36 @@ function showPV(player, sgf, winrate, pv, nodes) {
     player.setFrozen(true);
 }
 
-nw.App.on('open', function(evt) {
-    console.log(evt);
-});
+function copyBoard(player) {
+    const board = player.board;
+    const canvas = document.createElement('canvas');
+    const width = parseFloat(board.element.style.width);
+    const height = parseFloat(board.element.style.height);
+    canvas.width = width;
+    canvas.height = height;
+    const ctx = canvas.getContext('2d');
+    const backgroundImage = document.createElement('img');
+    backgroundImage.width = width;
+    backgroundImage.height = height;
+    backgroundImage.src = player.board.background;
+    ctx.drawImage(backgroundImage, 0, 0);
+    ctx.drawImage(board.grid.element, 0, 0);
+    for (const c of board.shadow.elements) {
+        ctx.drawImage(c, 0, 0);
+    }
+    for (const c of board.stone.elements) {
+        ctx.drawImage(c, 0, 0);
+    }
+
+    const clip = nw.Clipboard.get();
+    clip.set(canvas.toDataURL(), 'png');
+}
+
+
+document.addEventListener('copy', function(event) {
+    event.preventDefault();
+    copyBoard(player);
+}, false);
 
 document.getElementById('ai-start').addEventListener('click', function(event) {
     if (!engines) {
