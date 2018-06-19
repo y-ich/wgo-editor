@@ -18,7 +18,7 @@ LeelaもしくはLeela Zeroの欄を埋めてください。
 
 ## ダウンロード
 
-- [macOS用](https://github.com/y-ich/wgo-editor/releases/download/v0.1.1/wgo-editor.mac-x64.zip)
+- [macOS用](https://github.com/y-ich/wgo-editor/releases/download/v0.1.3/wgo-editor.mac-x64.zip)
 
 以下は更新を停止しています。動作確認にご協力いただける方がおられましたら更新は再開したいと思います。
 - [64bit Windows用](https://github.com/y-ich/wgo-editor/releases/download/v0.1.0/wgo-editor.win-x64.zip) (パッケージ作っただけで動作未確認です、すみません…)
