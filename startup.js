@@ -1,9 +1,10 @@
 /* global nw WGo jssgf AppLang */
 const win = nw.Window.get();
+win.showDevTools();
 const fs = require('fs');
 const path = require('path');
-process.env.LZ19_WEIGHTS = path.join(process.cwd(), 'elf_converted_weights.txt');
 const { GtpLeela, GtpLeelaZero, coord2move } = require('gtp-wrapper');
+const { fileToCovertedString, xyz2sgf, getExtension } = require('./xyz2sgf.js');
 
 class GtpLeelaZero19 extends GtpLeelaZero {}
 class GtpLeelaZero9 extends GtpLeelaZero {}
@@ -95,13 +96,17 @@ function setupFileInput() {
     const fileInput = document.createElement('input');
     fileInput.id = 'file-input';
     fileInput.type = 'file';
-    fileInput.accept = '.sgf';
+    fileInput.accept = '.sgf,.gib,.ngf,.ugf,.ugi';
     fileInput.addEventListener('change', function(evt) {
         if (!this.nwsaveas) {
             const reader = new FileReader();
-            reader.onload = function(evt) {
-                player.loadSgf(evt.target.result);
+            reader.onload = async evt => {
+                const sgf = /\.sgf$/.test(this.files[0].name) ?
+                    evt.target.result :
+                    await xyz2sgf(evt.target.result, getExtension(this.files[0].name));
+                player.loadSgf(sgf);
             }
+            console.log(this.files[0]);
             reader.readAsText(this.files[0]);
         } else {
             saveCurrentSgf(player, fileInput.value);
@@ -310,12 +315,17 @@ document.getElementById('ai-stop').addEventListener('click', async function() {
     }
 }, false);
 
-function main() {
+async function main() {
     let sgf = null;
 
     setupMainMenu();
     if (nw.App.argv.length > 0) {
-        sgf = fs.readFileSync(nw.App.argv[0]);
+        if (/\.sgf$/.test(nw.App.argv[0])) {
+            sgf = fs.readFileSync(nw.App.argv[0], { encoding: 'utf-8' });
+        } else {
+            sgf = await fileToCovertedString(nw.App.argv[0]);
+            console.log(sgf);
+        }
     }
     player = new WGo.BasicPlayer(document.getElementById("player"), {
         sgf: sgf ? sgf : `(;FF[4]GM[1]CA[UTF-8]AP[${nw.App.manifest.name}:${nw.App.manifest.version}]EV[]GN[]GC[]PB[]BR[]PW[]WR[])`
