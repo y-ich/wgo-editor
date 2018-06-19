@@ -3,6 +3,7 @@ const win = nw.Window.get();
 // win.showDevTools();
 const fs = require('fs');
 const path = require('path');
+// const jssgf = require('jssgf'); // なぜかnpmのjssgfはstringifyの引数の中の配列がプレインオブジェクトになってしまう
 const { GtpLeela, GtpLeelaZero, coord2move } = require('gtp-wrapper');
 const { fileToCovertedString, xyz2sgf, getExtension } = require('xyz2sgf');
 
