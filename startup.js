@@ -4,6 +4,7 @@ const win = nw.Window.get();
 const fs = require('fs');
 const path = require('path');
 // const jssgf = require('jssgf'); // なぜかnpmのjssgfはstringifyの引数の中の配列がプレインオブジェクトになってしまう
+const AutoUpdater = require("nw-autoupdater");
 const { GtpLeela, GtpLeelaZero, coord2move } = require('gtp-wrapper');
 const { fileToCovertedString, xyz2sgf, getExtension } = require('xyz2sgf');
 
@@ -257,6 +258,65 @@ function copyBoard(player) {
 }
 
 
+async function autoUpdate() {
+    const updater = new AutoUpdater(
+        require("./package.json"),
+        { strategy: "ScriptSwap" }
+    );
+    try {
+        // Download/unpack update if any available
+        const rManifest = await updater.readRemoteManifest();
+        const needsUpdate = await updater.checkNewVersion(rManifest);
+        if (!needsUpdate) {
+            return;
+        }
+        if (!confirm(AppLang.t('new-release'))) {
+            return;
+        }
+        const dom = document.getElementById('update');
+        dom.style.display = 'block';
+        // Subscribe for progress events
+        updater.on("download", (downloadSize, totalSize) => {
+            dom.innerText = `Downloading...(${downloadSize}/${totalSize})`;
+        });
+        updater.on("install", (installFiles, totalFiles) => {
+            dom.innerText = `Installing...(${installFiles}/${totalFiles})`;
+        });
+        const updateFile = await updater.download(rManifest);
+        await updater.unpack(updateFile);
+        alert(AppLang.t('updating'));
+        await updater.restartToSwap();
+    } catch (e) {
+        console.error(e);
+    }
+}
+
+async function main() {
+    await autoUpdate();
+    let sgf = null;
+
+    setupMainMenu();
+    if (nw.App.argv.length > 0) {
+        win.title = nw.App.argv[0];
+        document.title = nw.App.argv[0];
+        if (/\.sgf$/.test(nw.App.argv[0])) {
+            sgf = fs.readFileSync(nw.App.argv[0], { encoding: 'utf-8' });
+        } else {
+            sgf = await fileToCovertedString(nw.App.argv[0]);
+        }
+    }
+    player = new WGo.BasicPlayer(document.getElementById("player"), {
+        sgf: sgf ? sgf : `(;FF[4]GM[1]CA[UTF-8]AP[${nw.App.manifest.name}:${nw.App.manifest.version}]EV[]GN[]GC[]PB[]BR[]PW[]WR[])`
+    });
+    win.on('close', function(event) {
+        if (player.kifu._edited && !confirm(AppLang.t('confirm_close'))) {
+            return;
+        }
+        win.close(true);
+    });
+}
+
+
 document.addEventListener('copy', function(event) {
     event.preventDefault();
     copyBoard(player);
@@ -322,29 +382,5 @@ document.getElementById('ai-stop').addEventListener('click', async function() {
         restore = null;
     }
 }, false);
-
-async function main() {
-    let sgf = null;
-
-    setupMainMenu();
-    if (nw.App.argv.length > 0) {
-        win.title = nw.App.argv[0];
-        document.title = nw.App.argv[0];
-        if (/\.sgf$/.test(nw.App.argv[0])) {
-            sgf = fs.readFileSync(nw.App.argv[0], { encoding: 'utf-8' });
-        } else {
-            sgf = await fileToCovertedString(nw.App.argv[0]);
-        }
-    }
-    player = new WGo.BasicPlayer(document.getElementById("player"), {
-        sgf: sgf ? sgf : `(;FF[4]GM[1]CA[UTF-8]AP[${nw.App.manifest.name}:${nw.App.manifest.version}]EV[]GN[]GC[]PB[]BR[]PW[]WR[])`
-    });
-    win.on('close', function(event) {
-        if (player.kifu._edited && !confirm(AppLang.t('confirm_close'))) {
-            return;
-        }
-        win.close(true);
-    });
-}
 
 main();

@@ -12,5 +12,7 @@ AppLang.i18n[AppLang.lang] = {
     "black-winrate": "黒の勝率",
 	"playouts": "プレイアウト数",
 	"develop": "開発",
-	"devtools": "開発ツール"
+	"devtools": "開発ツール",
+	"new-release": "新しいバージョンがあります。更新しますか？",
+	"updating": "更新を完了するためにアプリを再起動します"
 };

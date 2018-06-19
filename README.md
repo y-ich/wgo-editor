@@ -19,7 +19,7 @@ When you click "AI start" button again after setting, Leela will start to search
 
 ## Downloads
 
-- [for macOS](https://github.com/y-ich/wgo-editor/releases/download/v0.1.3/wgo-editor.mac-x64.zip)
+- [for macOS](https://github.com/y-ich/wgo-editor/releases/download/v0.2.0/wgo-editor.mac-x64.zip)
 
 Currently packages below are not updated. I will update them if someone helps me integration test.
 - [for 64bit Windows](https://github.com/y-ich/wgo-editor/releases/download/v0.1.0/wgo-editor.win-x64.zip) (Sorry, not tested…)
