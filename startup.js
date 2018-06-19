@@ -1,10 +1,10 @@
 /* global nw WGo jssgf AppLang */
 const win = nw.Window.get();
-win.showDevTools();
+// win.showDevTools();
 const fs = require('fs');
 const path = require('path');
 const { GtpLeela, GtpLeelaZero, coord2move } = require('gtp-wrapper');
-const { fileToCovertedString, xyz2sgf, getExtension } = require('./xyz2sgf.js');
+const { fileToCovertedString, xyz2sgf, getExtension } = require('xyz2sgf');
 
 class GtpLeelaZero19 extends GtpLeelaZero {}
 class GtpLeelaZero9 extends GtpLeelaZero {}
@@ -99,6 +99,8 @@ function setupFileInput() {
     fileInput.accept = '.sgf,.gib,.ngf,.ugf,.ugi';
     fileInput.addEventListener('change', function(evt) {
         if (!this.nwsaveas) {
+            win.title = fileInput.value;
+            document.title = fileInput.value;
             const reader = new FileReader();
             reader.onload = async evt => {
                 const sgf = /\.sgf$/.test(this.files[0].name) ?
@@ -106,7 +108,6 @@ function setupFileInput() {
                     await xyz2sgf(evt.target.result, getExtension(this.files[0].name));
                 player.loadSgf(sgf);
             }
-            console.log(this.files[0]);
             reader.readAsText(this.files[0]);
         } else {
             saveCurrentSgf(player, fileInput.value);
@@ -116,7 +117,6 @@ function setupFileInput() {
 }
 
 function setupMainMenu() {
-    const fileInput = setupFileInput();
     const menubar = new nw.Menu({ type: 'menubar' });
     const fileMenu = new nw.Menu();
 
@@ -148,7 +148,7 @@ function setupMainMenu() {
             if (player.kifu._edited && !confirm(AppLang.t('confirm_abandon'))) {
                 return
             }
-            delete fileInput.nwsaveas;
+            const fileInput = setupFileInput();
             fileInput.click();
         },
         key: 'o',
@@ -157,7 +157,13 @@ function setupMainMenu() {
     fileMenu.append(new nw.MenuItem({
         label: AppLang.t('save'),
         click: function() {
-            saveCurrentSgf(player, fileInput.value);
+            if (getExtension(document.title) === '.sgf') {
+                saveCurrentSgf(player, document.title);
+            } else {
+                const fileInput = setupFileInput();
+                fileInput.nwsaveas = document.title.replace(/.*\//, '').replace(/\.\w+$/, '.sgf');
+                fileInput.click();
+            }
         },
         key: 's',
         modifiers: 'cmd'
@@ -165,6 +171,7 @@ function setupMainMenu() {
     fileMenu.append(new nw.MenuItem({
         label: AppLang.t('saveas'),
         click: function() {
+            const fileInput = setupFileInput();
             fileInput.nwsaveas = 'noname.sgf'
             fileInput.click();
         },
@@ -320,11 +327,12 @@ async function main() {
 
     setupMainMenu();
     if (nw.App.argv.length > 0) {
+        win.title = nw.App.argv[0];
+        document.title = nw.App.argv[0];
         if (/\.sgf$/.test(nw.App.argv[0])) {
             sgf = fs.readFileSync(nw.App.argv[0], { encoding: 'utf-8' });
         } else {
             sgf = await fileToCovertedString(nw.App.argv[0]);
-            console.log(sgf);
         }
     }
     player = new WGo.BasicPlayer(document.getElementById("player"), {
