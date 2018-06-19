@@ -1,25 +1,26 @@
 # WGo Editor
-[WGo.js](http://wgo.waltheri.net/)を使ったSGFエディタです。
+This is an SGF editor using [WGo.js](http://wgo.waltheri.net/).
 
-コピーショートカットキーで盤上の画像をクリッピボードにコピーできます。局面をツイートしたいときなどにご利用ください。
+You can copy a current position into system clipboard as png by copy shortcut key.
+It may be useful when tweeting a position.
 
-[Leela](https://www.sjeng.org/leela.html)や[Leela Zero](https://github.com/gcp/leela-zero)と連携して局面検討ができるのが特長です。
+Also, it has a functionality that shows main principal variations of positions by [Leela](https://www.sjeng.org/leela.html) or [Leela Zero](https://github.com/gcp/leela-zero) in real-time.
 
 ![スクリーンショット](screenshot.png)
 
-(LeelaもしくはLeela Zeroは別途インストールしてください)
+(You need to install Leela or Leela Zero.)
 
-## LeelaもしくはLeela Zeroの設定
-画面下の"AI start”ボタンを始めてクリックすると、設定ウィンドウが現れます。
+## Settings of Leela or Leela Zero
+The settings window will appear if you click "AI start” button at the bottom for the first time.
 
-LeelaもしくはLeela Zeroの欄を埋めてください。
+Fill out fields of Leela or Leela Zero.
 
-設定が終わってから再度"AI start”ボタンをクリックすると、Leelaが検討を始めてリアルタイムで読み筋を表示します。
+When you click "AI start" button again after setting, Leela will start to search a position, and then the app will show main principal variations in real-time.
 
-## ダウンロード
+## Downloads
 
-- [macOS用](https://github.com/y-ich/wgo-editor/releases/download/v0.1.1/wgo-editor.mac-x64.zip)
+- [for macOS](https://github.com/y-ich/wgo-editor/releases/download/v0.1.2/wgo-editor.mac-x64.zip)
 
-以下は更新を停止しています。動作確認にご協力いただける方がおられましたら更新は再開したいと思います。
-- [64bit Windows用](https://github.com/y-ich/wgo-editor/releases/download/v0.1.0/wgo-editor.win-x64.zip) (パッケージ作っただけで動作未確認です、すみません…)
-- [64bit Linux用](https://github.com/y-ich/wgo-editor/releases/download/v0.1.0/wgo-editor.linux-x64.zip) (パッケージ作っただけで動作未確認です、すみません…)
+Currently packages below are not updated. I will update them if someone helps me integration test.
+- [for 64bit Windows](https://github.com/y-ich/wgo-editor/releases/download/v0.1.0/wgo-editor.win-x64.zip) (Sorry, not tested…)
+- [for 64bit Linux](https://github.com/y-ich/wgo-editor/releases/download/v0.1.0/wgo-editor.linux-x64.zip) (Sorry, not tested…)
