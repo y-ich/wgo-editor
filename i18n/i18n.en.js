@@ -14,5 +14,6 @@ AppLang.i18n[AppLang.lang] = {
 	"develop": "Development",
 	"devtools": "DevTools",
 	"new-release": "New release is available. Do you want to upgrade?",
-	"updating": "The app will restart to finish installing the update"
+	"updating": "The app will restart to finish installing the update",
+	"start-ai": "Invoking AI..."
 };

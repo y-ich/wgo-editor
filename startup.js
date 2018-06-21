@@ -200,30 +200,6 @@ function setupMainMenu() {
     nw.Window.get().menu = menubar;
 }
 
-function showMoveNumber(player) {
-    let node = player.kifuReader.node;
-    const add = [];
-    while (true) {
-        if (node.move) {
-            add.push({
-				type: "LB",
-				x: node.move.x,
-				y: node.move.y,
-            });
-        }
-        if (node.MN || !node.parent) {
-            break;
-        }
-        node = node.parent;
-    }
-    const start = node.MN ? parseInt(node.MN) : 1;
-    for (let i = 0; i < add.length; i++) {
-        add[add.length - 1 - i].text = (start + i).toString();
-    }
-    player.temp_marks = player.temp_marks.concat(add);
-    player.board.addObject(add);
-}
-
 function showPV(player, sgf, winrate, pv, nodes) {
     const collection = jssgf.fastParse(sgf);
     const root = collection[0];
@@ -247,9 +223,8 @@ function showPV(player, sgf, winrate, pv, nodes) {
     }
     node.C = `${AppLang.t('black-winrate')} ${Math.round(winrate)}%\n(${AppLang.t('playouts')} ${nodes})`;
     player.setFrozen(false);
-    player.config.markLastMove = false;
+    player.config.displayMoveNumbers = true;
     player.loadSgf(jssgf.stringify(collection), Infinity);
-    showMoveNumber(player);
     player.setFrozen(true);
 }
 
@@ -354,6 +329,7 @@ document.getElementById('ai-start').addEventListener('click', function(event) {
     const BYOYOMI = 57600; // 16時間(5時封じ手から翌朝9時を想定)。free dynoの場合40分程度でmemory quota exceededになる
     restore = {
         sgf: player.kifuReader.kifu.toSgf(),
+        displayMoveNumbers: player.config.displayMoveNumbers,
         path: player.kifuReader.path,
         _edited: player.kifu._edited
     };
@@ -374,9 +350,11 @@ document.getElementById('ai-start').addEventListener('click', function(event) {
         default:
         SelectedGtpLeela = GtpLeela;
     }
+    player.showMessage(AppLang.t('start-ai'), undefined, true);
     const { instance, promise } = SelectedGtpLeela.genmoveFrom(sgf, BYOYOMI, 'gtp', [], 0, line => {
         const dump = SelectedGtpLeela.parseDump(line);
         if (dump) {
+            player.hideMessage();
             const winrate = Math.max(Math.min(dump.winrate, 100), 0);
             const blackWinrate = turn === 'B' ? winrate : 100 - winrate;
             const pv = dump.pv.map(c => coord2move(c, size));
@@ -400,6 +378,7 @@ document.getElementById('ai-stop').addEventListener('click', async function() {
     }
     if (restore) {
         player.setFrozen(false);
+        player.config.displayMoveNumbers = restore.displayMoveNumbers;
         player.loadSgf(restore.sgf, restore.path);
         player.kifu._edited = restore._edited;
         restore = null;

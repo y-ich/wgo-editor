@@ -59,11 +59,6 @@ WGo.i18n[WGo.lang] = {
 	"bwin": "黒の $ 目勝ち",
 	"wwin": "白の $ 目勝ち",
 	"help_score": "石の生死をマークするにはクリックしてください。You can also set and unset territory points by clicking on them. Territories must be completely bordered.",
-	"file": "ファイル",
-	"new": "新規",
-	"open": "開く…",
-	"save": "保存",
-	"saveas": "別名で保存…",
-	"confirm_close": "変更が保存されていません。保存せずに終了してもいいですか？",
-	"confirm_abandon": "変更が保存されていません。破棄してもいいですか？",
+	"move-number": "手番号をトグル",
+	"insert-frame": "フレームを挿入/削除"
 };
