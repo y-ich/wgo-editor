@@ -255,13 +255,15 @@ function copyBoard(player) {
 
 
 async function autoUpdate() {
+    const rp = require('request-promise-native');
     const updater = new AutoUpdater(
         require("./package.json"),
         { strategy: "ScriptSwap" }
     );
     try {
         // Download/unpack update if any available
-        const rManifest = await updater.readRemoteManifest();
+        //const rManifest = await updater.readRemoteManifest(); // Githubはcontent-typeにjsonを返さないのでエラーになる
+        const rManifest = JSON.parse(await rp({ url: nw.App.manifest.manifestUrl }));
         const needsUpdate = await updater.checkNewVersion(rManifest);
         if (!needsUpdate) {
             return;
