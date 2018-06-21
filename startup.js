@@ -354,7 +354,8 @@ document.getElementById('ai-start').addEventListener('click', function(event) {
     const BYOYOMI = 57600; // 16時間(5時封じ手から翌朝9時を想定)。free dynoの場合40分程度でmemory quota exceededになる
     restore = {
         sgf: player.kifuReader.kifu.toSgf(),
-        path: player.kifuReader.path
+        path: player.kifuReader.path,
+        _edited: player.kifu._edited
     };
     const sgf = sgfUntil(restore.sgf, restore.path);
     const [root] = jssgf.fastParse(sgf);
@@ -400,6 +401,7 @@ document.getElementById('ai-stop').addEventListener('click', async function() {
     if (restore) {
         player.setFrozen(false);
         player.loadSgf(restore.sgf, restore.path);
+        player.kifu._edited = restore._edited;
         restore = null;
     }
 }, false);
