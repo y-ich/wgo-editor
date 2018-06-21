@@ -200,6 +200,30 @@ function setupMainMenu() {
     nw.Window.get().menu = menubar;
 }
 
+function showMoveNumber(player) {
+    let node = player.kifuReader.node;
+    const add = [];
+    while (true) {
+        if (node.move) {
+            add.push({
+				type: "LB",
+				x: node.move.x,
+				y: node.move.y,
+            });
+        }
+        if (node.MN || !node.parent) {
+            break;
+        }
+        node = node.parent;
+    }
+    const start = node.MN ? parseInt(node.MN) : 1;
+    for (let i = 0; i < add.length; i++) {
+        add[add.length - 1 - i].text = (start + i).toString();
+    }
+    player.temp_marks = player.temp_marks.concat(add);
+    player.board.addObject(add);
+}
+
 function showPV(player, sgf, winrate, pv, nodes) {
     const collection = jssgf.fastParse(sgf);
     const root = collection[0];
@@ -212,23 +236,20 @@ function showPV(player, sgf, winrate, pv, nodes) {
     };
     node._children.push(fg);
     node = fg;
-    let num = 1;
-    const lb = [];
     for (let e of pv) {
         const n = {
             [color]: e,
             _children: []
         };
         node._children.push(n);
-        lb.push(`${e}:${num}`);
         node = n;
-        num += 1;
         color = jssgf.opponentOf(color);
     }
-    node.LB = lb;
     node.C = `${AppLang.t('black-winrate')} ${Math.round(winrate)}%\n(${AppLang.t('playouts')} ${nodes})`;
     player.setFrozen(false);
+    player.config.markLastMove = false;
     player.loadSgf(jssgf.stringify(collection), Infinity);
+    showMoveNumber(player);
     player.setFrozen(true);
 }
 
