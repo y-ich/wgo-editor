@@ -1,7 +1,7 @@
 {
   "name": "wgo-editor",
   "description": "SGF editor",
-  "version": "0.2.3",
+  "version": "0.2.2",
   "main": "index.html",
   "chromium-args": "--enable-logging=stderr",
   "window": {
@@ -31,7 +31,7 @@
   "manifestUrl": "https://raw.githubusercontent.com/y-ich/wgo-editor/master/package.json",
   "packages": {
     "mac64": {
-      "url": "https://github.com/y-ich/wgo-editor/releases/download/v0.2.3/wgo-editor.mac-x64.zip",
+      "url": "https://github.com/y-ich/wgo-editor/releases/download/untagged-7e7f70099e5f1999ea4f/wgo-editor.mac-x64.zip",
       "size": 217680346
     }
   }
