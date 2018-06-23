@@ -1,7 +1,7 @@
 {
   "name": "wgo-editor",
   "description": "SGF editor",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "main": "index.html",
   "chromium-args": "--enable-logging=stderr",
   "window": {
@@ -22,7 +22,7 @@
     "nwVersion": "0.31.2"
   },
   "scripts": {
-    "dist": "build --tasks linux-x64,mac-x64,win-x64 --mirror https://dl.nwjs.io/ .",
+    "dist": "build --tasks mac-x64 --mirror https://dl.nwjs.io/ .",
     "start": "run --x64 --mirror https://dl.nwjs.io/ ."
   },
   "devDependencies": {
@@ -32,7 +32,7 @@
   "packages": {
     "mac64": {
       "url": "https://github.com/y-ich/wgo-editor/releases/download/v0.2.3/wgo-editor.mac-x64.zip",
-      "size": 217680346
+      "size": 217680351
     }
   }
 }

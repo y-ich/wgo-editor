@@ -260,37 +260,37 @@ async function autoUpdate() {
         require("./package.json"),
         { strategy: "ScriptSwap" }
     );
-    try {
-        // Download/unpack update if any available
-        //const rManifest = await updater.readRemoteManifest(); // Githubはcontent-typeにjsonを返さないのでエラーになる
-        const rManifest = JSON.parse(await rp({ url: nw.App.manifest.manifestUrl }));
-        const needsUpdate = await updater.checkNewVersion(rManifest);
-        if (!needsUpdate) {
-            return;
-        }
-        if (!confirm(AppLang.t('new-release'))) {
-            return;
-        }
-        const dom = document.getElementById('update');
-        dom.style.display = 'block';
-        // Subscribe for progress events
-        updater.on("download", (downloadSize, totalSize) => {
-            dom.innerText = `Downloading...(${downloadSize}/${totalSize})`;
-        });
-        updater.on("install", (installFiles, totalFiles) => {
-            dom.innerText = `Installing...(${installFiles}/${totalFiles})`;
-        });
-        const updateFile = await updater.download(rManifest);
-        await updater.unpack(updateFile);
-        alert(AppLang.t('updating'));
-        await updater.restartToSwap();
-    } catch (e) {
-        console.error(e);
+    // Download/unpack update if any available
+    //const rManifest = await updater.readRemoteManifest(); // Githubはcontent-typeにjsonを返さないのでエラーになる
+    const rManifest = JSON.parse(await rp({ url: nw.App.manifest.manifestUrl }));
+    const needsUpdate = await updater.checkNewVersion(rManifest);
+    if (!needsUpdate) {
+        return false;
     }
+    if (!confirm(AppLang.t('new-release'))) {
+        return false;
+    }
+    const dom = document.getElementById('update');
+    dom.style.display = 'block';
+    // Subscribe for progress events
+    updater.on("download", (downloadSize, totalSize) => {
+        dom.innerText = `Downloading...(${downloadSize}/${totalSize})`;
+    });
+    updater.on("install", (installFiles, totalFiles) => {
+        dom.innerText = `Installing...(${installFiles}/${totalFiles})`;
+    });
+    const updateFile = await updater.download(rManifest);
+    await updater.unpack(updateFile);
+    alert(AppLang.t('updating'));
+    await updater.restartToSwap();
+    return true;
 }
 
 async function main() {
-    await autoUpdate();
+    autoUpdate().catch(function(r) {
+        const dom = document.getElementById('update');
+        dom.innerText = r.toString();
+    });
     let sgf = null;
 
     setupMainMenu();
