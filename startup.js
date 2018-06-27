@@ -22,17 +22,18 @@ function setEngines() {
             path.join(nw.App.dataPath, 'engines.json'),
             { encoding: 'utf-8' }
         ));
-        if (engines.leela) {
+        if (engines.leela && engines.leela.command) {
             GtpLeela.init(engines.leela.workDir, engines.leela.command, engines.leela.options);
         }
-        if (engines.leelaZero19) {
+        if (engines.leelaZero19 && engines.leelaZero19.command) {
             GtpLeelaZero19.init(engines.leelaZero19.workDir, engines.leelaZero19.command, engines.leelaZero19.options);
         }
-        if (engines.leelaZero9) {
+        if (engines.leelaZero9 && engines.leelaZero9.command) {
             GtpLeelaZero9.init(engines.leelaZero9.workDir, engines.leelaZero9.command, engines.leelaZero9.options);
         }
     } catch (e) {
         console.log('no engines.json');
+        console.error(e);
     }
 }
 setEngines();
@@ -326,7 +327,6 @@ document.getElementById('ai-start').addEventListener('click', function(event) {
         return;
     }
     event.currentTarget.style.display = 'none';
-    document.getElementById('ai-stop').style.display = 'inline';
     player.setFrozen(true);
     const BYOYOMI = 57600; // 16時間(5時封じ手から翌朝9時を想定)。free dynoの場合40分程度でmemory quota exceededになる
     restore = {
@@ -342,17 +342,21 @@ document.getElementById('ai-start').addEventListener('click', function(event) {
     const { num, node } = primaryLastNode(root);
     const turn = getTurn(node, root);
     let SelectedGtpLeela;
+    let LeelaName = '';
     switch (size) {
         case 9:
         SelectedGtpLeela = engines.leelaZero9 ? GtpLeelaZero9 : GtpLeela;
+        LeelaName = 'Leela Zero 9'
         break;
         case 19:
         SelectedGtpLeela = engines.leelaZero19 ? GtpLeelaZero19 : GtpLeela;
+        LeelaName = 'Leela Zero 19'
         break;
         default:
         SelectedGtpLeela = GtpLeela;
+        LeelaName = 'Leela'
     }
-    player.showMessage(AppLang.t('start-ai'), undefined, true);
+    player.showMessage(AppLang.t('starting')(LeelaName), undefined, true);
     const { instance, promise } = SelectedGtpLeela.genmoveFrom(sgf, BYOYOMI, 'gtp', [], 0, line => {
         const dump = SelectedGtpLeela.parseDump(line);
         if (dump) {
@@ -369,11 +373,12 @@ document.getElementById('ai-start').addEventListener('click', function(event) {
     promise.catch(function(r) {
         console.log(r);
     });
+    document.getElementById('ai-stop').style.display = 'inline';
 }, false);
 
 document.getElementById('ai-stop').addEventListener('click', async function() {
+    player.hideMessage();
     event.currentTarget.style.display = 'none';
-    document.getElementById('ai-start').style.display = 'inline';
     if (gtp) {
         await gtp.terminate();
         gtp = null;
@@ -385,6 +390,7 @@ document.getElementById('ai-stop').addEventListener('click', async function() {
         player.kifu._edited = restore._edited;
         restore = null;
     }
+    document.getElementById('ai-start').style.display = 'inline';
 }, false);
 
 main();

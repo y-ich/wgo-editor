@@ -15,5 +15,5 @@ AppLang.i18n[AppLang.lang] = {
 	"devtools": "開発ツール",
 	"new-release": "新しいバージョンがあります。更新しますか？",
 	"updating": "更新を完了するためにアプリを再起動します",
-	"start-ai": "AI起動中…"
+	"starting": function(name) { return `${name}起動中…`; }
 };
