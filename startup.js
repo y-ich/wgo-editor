@@ -289,6 +289,7 @@ async function autoUpdate() {
 
 async function main() {
     autoUpdate().catch(function(r) {
+        console.error(r);
         const dom = document.getElementById('update');
         dom.innerText = r.toString();
     });

@@ -1,7 +1,7 @@
 {
   "name": "wgo-editor",
   "description": "SGF editor",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "main": "index.html",
   "chromium-args": "--enable-logging=stderr",
   "window": {
@@ -12,7 +12,7 @@
   "dependencies": {
     "gtp-wrapper": "^1.3.0",
     "memorystream": "^0.3.1",
-    "nw-autoupdater": "^1.1.4",
+    "nw-autoupdater": "git+https://github.com/y-ich/nw-autoupdater.git",
     "purecss": "^1.0.0",
     "request": "^2.87.0",
     "request-promise-native": "^1.0.5",
@@ -31,8 +31,8 @@
   "manifestUrl": "https://raw.githubusercontent.com/y-ich/wgo-editor/master/package.json",
   "packages": {
     "mac64": {
-      "url": "https://github.com/y-ich/wgo-editor/releases/download/v0.2.5/wgo-editor.mac-x64.zip",
-      "size": 217680456
+      "url": "https://github.com/y-ich/wgo-editor/releases/download/v0.2.6/wgo-editor.mac-x64.zip",
+      "size": 217680514
     }
   }
 }
