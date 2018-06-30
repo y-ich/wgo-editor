@@ -322,7 +322,7 @@ document.addEventListener('copy', function(event) {
     copyBoard(player);
 }, false);
 
-document.getElementById('ai-start').addEventListener('click', function(event) {
+document.getElementById('ai-start').addEventListener('click', async function(event) {
     if (!engines) {
         openSettings();
         return;
@@ -358,22 +358,29 @@ document.getElementById('ai-start').addEventListener('click', function(event) {
         LeelaName = 'Leela'
     }
     player.showMessage(AppLang.t('starting')(LeelaName), undefined, true);
-    const { instance, promise } = SelectedGtpLeela.genmoveFrom(sgf, BYOYOMI, 'gtp', [], 0, line => {
-        const dump = SelectedGtpLeela.parseDump(line);
-        if (dump) {
-            player.hideMessage();
-            const winrate = Math.max(Math.min(dump.winrate, 100), 0);
-            const blackWinrate = turn === 'B' ? winrate : 100 - winrate;
-            const pv = dump.pv.map(c => coord2move(c, size));
-            showPV(player, sgf, blackWinrate, pv, dump.nodes);
-        } else {
-            console.log('stderr: %s', line);
+    try {
+        if (!gtp) {
+            gtp = new SelectedGtpLeela();
+            gtp.start([], 0);
         }
-    });
-    gtp = instance;
-    promise.catch(function(r) {
-        console.log(r);
-    });
+        await gtp.loadSgf(sgf);
+        await gtp.timeSettings(0, BYOYOMI, 1);
+        await gtp.lzAnalyze(100, line => {
+            const infos = SelectedGtpLeela.parseInfo(line);
+            if (infos) {
+                player.hideMessage();
+                const info = infos[0];
+                const winrate = Math.max(Math.min(info.winrate, 100), 0);
+                const blackWinrate = turn === 'B' ? winrate : 100 - winrate;
+                const pv = info.pv.map(c => coord2move(c, size));
+                showPV(player, sgf, blackWinrate, pv, info.visits);
+            } else {
+                console.log('stderr: %s', line);
+            }
+        });
+    } catch (e) {
+        console.error(e);
+    }
     document.getElementById('ai-stop').style.display = 'inline';
 }, false);
 
@@ -381,8 +388,7 @@ document.getElementById('ai-stop').addEventListener('click', async function() {
     player.hideMessage();
     event.currentTarget.style.display = 'none';
     if (gtp) {
-        await gtp.terminate();
-        gtp = null;
+        await gtp.name();
     }
     if (restore) {
         player.setFrozen(false);
