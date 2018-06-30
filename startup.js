@@ -14,6 +14,7 @@ class GtpLeelaZero9 extends GtpLeelaZero {}
 let engines = null;
 let player = null;
 let gtp = null;
+let isLZNext = false;
 let restore = null;
 
 function setEngines() {
@@ -358,37 +359,56 @@ document.getElementById('ai-start').addEventListener('click', async function(eve
         LeelaName = 'Leela'
     }
     player.showMessage(AppLang.t('starting')(LeelaName), undefined, true);
+
+    if (!gtp) {
+        gtp = new SelectedGtpLeela();
+        gtp.start([], 0);
+    }
+    isLZNext = (await gtp.knownCommand('lz-analyze')).result === 'true';
+    document.getElementById('ai-stop').style.display = 'inline';
     try {
-        if (!gtp) {
-            gtp = new SelectedGtpLeela();
-            gtp.start([], 0);
+        if (isLZNext) {
+            await gtp.loadSgf(sgf);
+            await gtp.timeSettings(0, BYOYOMI, 1);
+            await gtp.lzAnalyze(100, line => {
+                const infos = SelectedGtpLeela.parseInfo(line);
+                if (infos) {
+                    player.hideMessage();
+                    const info = infos[0];
+                    const winrate = Math.max(Math.min(info.winrate, 100), 0);
+                    const blackWinrate = turn === 'B' ? winrate : 100 - winrate;
+                    const pv = info.pv.map(c => coord2move(c, size));
+                    showPV(player, sgf, blackWinrate, pv, info.visits);
+                }
+            });
+        } else {
+            await gtp.genmoveFrom(sgf, BYOYOMI, 'gtp', line => {
+                const dump = SelectedGtpLeela.parseDump(line);
+                if (dump) {
+                    player.hideMessage();
+                    const winrate = Math.max(Math.min(dump.winrate, 100), 0);
+                    const blackWinrate = turn === 'B' ? winrate : 100 - winrate;
+                    const pv = dump.pv.map(c => coord2move(c, size));
+                    showPV(player, sgf, blackWinrate, pv, dump.nodes);
+                } else {
+                    console.log('stderr: %s', line);
+                }
+            });
         }
-        await gtp.loadSgf(sgf);
-        await gtp.timeSettings(0, BYOYOMI, 1);
-        await gtp.lzAnalyze(100, line => {
-            const infos = SelectedGtpLeela.parseInfo(line);
-            if (infos) {
-                player.hideMessage();
-                const info = infos[0];
-                const winrate = Math.max(Math.min(info.winrate, 100), 0);
-                const blackWinrate = turn === 'B' ? winrate : 100 - winrate;
-                const pv = info.pv.map(c => coord2move(c, size));
-                showPV(player, sgf, blackWinrate, pv, info.visits);
-            } else {
-                console.log('stderr: %s', line);
-            }
-        });
     } catch (e) {
         console.error(e);
     }
-    document.getElementById('ai-stop').style.display = 'inline';
 }, false);
 
 document.getElementById('ai-stop').addEventListener('click', async function() {
     player.hideMessage();
     event.currentTarget.style.display = 'none';
     if (gtp) {
-        await gtp.name();
+        if (isLZNext) {
+            await gtp.name();
+        } else {
+            await gtp.terminate();
+        }
     }
     if (restore) {
         player.setFrozen(false);
