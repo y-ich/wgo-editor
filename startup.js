@@ -377,7 +377,7 @@ document.getElementById('ai-start').addEventListener('click', async function(eve
                     const info = infos[0];
                     const winrate = Math.max(Math.min(info.winrate, 100), 0);
                     const blackWinrate = turn === 'B' ? winrate : 100 - winrate;
-                    const pv = info.pv.map(c => coord2move(c, size));
+                    const pv = info.pv.map(c => coord2move(c.toUpperCase(), size));
                     showPV(player, sgf, blackWinrate, pv, info.visits);
                 }
             });
