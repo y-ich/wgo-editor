@@ -206,7 +206,8 @@ function showPV(player, sgf, winrate, pv, nodes) {
     const collection = jssgf.fastParse(sgf);
     const root = collection[0];
     let node = jssgf.nthMoveNode(root, Infinity);
-    let color = node.B ? 'W' : 'B';
+    let color = node.B != null ? 'W' : 'B';
+    console.log(node, color);
     const fg = {
         FG: '259:',
         MN: '1',
