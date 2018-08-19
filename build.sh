@@ -1,5 +1,5 @@
 #!/usr/bin/bash
-VERSION=0.2.10
+VERSION=0.2.11
 npm update
 rm -rf dist/*
 npm run dist
