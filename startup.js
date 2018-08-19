@@ -103,8 +103,6 @@ function setupFileInput() {
     fileInput.accept = '.sgf,.gib,.ngf,.ugf,.ugi';
     fileInput.addEventListener('change', function(evt) {
         if (!this.nwsaveas) {
-            win.title = fileInput.value;
-            document.title = fileInput.value;
             const reader = new FileReader();
             reader.onload = async evt => {
                 const sgf = /\.sgf$/.test(this.files[0].name) ?
@@ -116,6 +114,8 @@ function setupFileInput() {
         } else {
             saveCurrentSgf(player, fileInput.value);
         }
+        win.title = fileInput.value;
+        document.title = fileInput.value;
     }, false);
     return fileInput;
 }
@@ -165,7 +165,11 @@ function setupMainMenu() {
                 saveCurrentSgf(player, document.title);
             } else {
                 const fileInput = setupFileInput();
-                fileInput.nwsaveas = document.title.replace(/.*\//, '').replace(/\.\w+$/, '.sgf');
+                if (getExtension(document.title) == null) {
+                    fileInput.nwsaveas = 'noname.sgf';
+                } else {
+                    fileInput.nwsaveas = document.title.replace(/.*\//, '').replace(/\.\w+$/, '.sgf');
+                }
                 fileInput.click();
             }
         },
